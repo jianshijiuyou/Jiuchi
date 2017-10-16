@@ -15,35 +15,23 @@ import android.view.View;
  * create date ：2017/10/16 0016  14:35
  * des ：
  */
-public class JiuChi extends View {
+@Deprecated
+public class JiuChi1 extends View {
 
     private Paint mPaint;
     private int mWidth;
-    private int SCALE_SIZE = 20;
-
-    private int curLength;
-
-    private int curIndex;
-    private int lastIndex;
-
     private float lastX;
+    private float startP;
 
-
-    private float offsetX;
-
-
-    private int mLength;
-
-
-    public JiuChi(Context context) {
+    public JiuChi1(Context context) {
         this(context, null);
     }
 
-    public JiuChi(Context context, @Nullable AttributeSet attrs) {
+    public JiuChi1(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public JiuChi(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public JiuChi1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();
@@ -53,72 +41,51 @@ public class JiuChi extends View {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
 
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         this.mWidth = w;
-
-        mLength = mWidth / SCALE_SIZE + 1;
-
-
-        Log.d("wang", "=====onSizeChanged===");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 
-
-        // 绘制背景
         canvas.drawColor(0xffefefef);
-        // 开始体重
         int k = 30;
+        int size = (mWidth - (int) startP) / 20+1;
 
-        for (int i = 0; i < mLength; i++) {
+        if(size>(mWidth/20+1)){
+            size=mWidth/20+1;
+        }
 
-            if ((i + curIndex) % 10 == 0) {
+        Log.d("wang","========"+size);
+        for (int i = 0; i < size; i++) {
+
+            if (i % 10 == 0) {
                 mPaint.setColor(Color.GRAY);
                 mPaint.setStrokeWidth(4);
-                canvas.drawLine(i * 20 + offsetX, 0, i * 20 + offsetX, 60, mPaint);
+                canvas.drawLine(i * 20 + startP, 0, i * 20 + startP, 60, mPaint);
 
                 //绘制数字
                 mPaint.setColor(Color.BLACK);
                 mPaint.setTextSize(25);
                 mPaint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText((k++) + "", i * 20 + offsetX, 120, mPaint);
+                canvas.drawText((k++) + "", i * 20 + startP, 120, mPaint);
             } else {
                 mPaint.setColor(Color.GRAY);
                 mPaint.setStrokeWidth(2);
-                canvas.drawLine(i * 20 + offsetX, 0, i * 20 + offsetX, 30, mPaint);
+                canvas.drawLine(i * 20 + startP, 0, i * 20 + startP, 30, mPaint);
             }
 
         }
-
-
         mPaint.setColor(Color.GREEN);
         mPaint.setStrokeWidth(8);
         canvas.drawLine(mWidth / 2, 0, mWidth / 2, 80, mPaint);
     }
 
-    private void offsetX(float offset) {
-
-
-        curLength += offset;
-        curIndex = curLength / SCALE_SIZE;
-
-
-        offsetX-=offset;
-        if(lastIndex!=curIndex){
-            offsetX=0;
-            lastIndex=curIndex;
-        }
-//        if(Math.abs(offsetX)>SCALE_SIZE){
-//            offsetX=0;
-//        }
-
-        //Log.d("wang", "=====offsetX==="+offsetX);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -129,15 +96,15 @@ public class JiuChi extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float x = event.getX();
-                offsetX(lastX - x);
+                float d = lastX - x;
                 lastX = x;
+                startP += -d;
                 invalidate();
                 break;
         }
 
         return true;
     }
-
 
 }
 

@@ -19,12 +19,12 @@ public class JiuChi extends View {
 
     private Paint mPaint;
     private int mWidth;
-    private int SCALE_SIZE = 20;
+    private int SCALE_SIZE = 50;
 
-    private int curLength;
+    private float curOffset;
 
     private int curIndex;
-    private int lastIndex;
+
 
     private float lastX;
 
@@ -33,6 +33,7 @@ public class JiuChi extends View {
 
 
     private int mLength;
+    private float defaultOffset;
 
 
     public JiuChi(Context context) {
@@ -45,25 +46,26 @@ public class JiuChi extends View {
 
     public JiuChi(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         init();
     }
 
     private void init() {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
-
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         this.mWidth = w;
-
-        mLength = mWidth / SCALE_SIZE + 1;
-
+        mLength = mWidth / SCALE_SIZE + 2;
+        if(mLength%2==0){
+            defaultOffset = (mWidth%SCALE_SIZE-SCALE_SIZE)/2;
+        }
 
         Log.d("wang", "=====onSizeChanged===");
+        //curIndex=-mLength/2;
+        //curOffset=curIndex*SCALE_SIZE;
     }
 
     @Override
@@ -72,25 +74,30 @@ public class JiuChi extends View {
 
         // 绘制背景
         canvas.drawColor(0xffefefef);
-        // 开始体重
-        int k = 30;
 
         for (int i = 0; i < mLength; i++) {
 
-            if ((i + curIndex) % 10 == 0) {
+            int startIndex=i + curIndex;
+
+            if(startIndex<0){
+                continue;
+            }
+
+            Log.d("wang", "=====onDraw==="+(i * SCALE_SIZE + offsetX+defaultOffset));
+            if (startIndex % 10 == 0) {
                 mPaint.setColor(Color.GRAY);
                 mPaint.setStrokeWidth(4);
-                canvas.drawLine(i * 20 + offsetX, 0, i * 20 + offsetX, 60, mPaint);
+                canvas.drawLine(i * SCALE_SIZE + offsetX+defaultOffset, 0, i * SCALE_SIZE + offsetX+defaultOffset, 60, mPaint);
 
                 //绘制数字
                 mPaint.setColor(Color.BLACK);
                 mPaint.setTextSize(25);
                 mPaint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText((k++) + "", i * 20 + offsetX, 120, mPaint);
+                canvas.drawText((startIndex/10)+ "", i * SCALE_SIZE + offsetX+defaultOffset, 120, mPaint);
             } else {
                 mPaint.setColor(Color.GRAY);
                 mPaint.setStrokeWidth(2);
-                canvas.drawLine(i * 20 + offsetX, 0, i * 20 + offsetX, 30, mPaint);
+                canvas.drawLine(i * SCALE_SIZE + offsetX+defaultOffset, 0, i * SCALE_SIZE + offsetX+defaultOffset, 30, mPaint);
             }
 
         }
@@ -104,20 +111,12 @@ public class JiuChi extends View {
     private void offsetX(float offset) {
 
 
-        curLength += offset;
-        curIndex = curLength / SCALE_SIZE;
+        curOffset += offset;
+        curIndex = (int) curOffset / SCALE_SIZE;
 
+        offsetX=-curOffset%SCALE_SIZE;
 
-        offsetX-=offset;
-        if(lastIndex!=curIndex){
-            offsetX=0;
-            lastIndex=curIndex;
-        }
-//        if(Math.abs(offsetX)>SCALE_SIZE){
-//            offsetX=0;
-//        }
-
-        //Log.d("wang", "=====offsetX==="+offsetX);
+        Log.d("wang", "=====curOffset==="+curOffset);
     }
 
     @Override
@@ -132,6 +131,29 @@ public class JiuChi extends View {
                 offsetX(lastX - x);
                 lastX = x;
                 invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                //Log.d("wang", "=====offsetX==="+offsetX);
+
+                if(offsetX>0){
+                    if(offsetX>(SCALE_SIZE/2)){
+                        offsetX(offsetX-SCALE_SIZE*1.0f);
+                        invalidate();
+                    }else{
+                        offsetX(offsetX);
+                        invalidate();
+                    }
+                }else {
+                    if(-offsetX>(SCALE_SIZE/2)){
+                        offsetX(SCALE_SIZE*1.0f+offsetX);
+                        invalidate();
+                    }else{
+                        offsetX(offsetX);
+                        invalidate();
+                    }
+                }
+
+                //Log.d("wang", "=====offsetX=eeeeeeeeeeee=="+offsetX);
                 break;
         }
 

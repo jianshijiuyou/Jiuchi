@@ -21,23 +21,15 @@ import android.widget.OverScroller;
 public class JiuChi extends View {
 
     private Paint mPaint;
+    private float gapWidth = 50F;
     private int mWidth;
-    private int gapWidth = 50;
-
     private float offset;
-    private int minValue = 30;
-    private int maxValue = 50;
-    private float perValue = 0.1f;
+    private float lastX;
+    private int mLength;
     private OverScroller mScroller;
     private VelocityTracker mVelocityTracker;
-    private int mLength;
-
-    private float lastX;
     private int maximumFlingVelocity;
     private int minimumFlingVelocity;
-    private int minOffset;
-    private int maxOffset;
-
 
     public JiuChi(Context context) {
         this(context, null);
@@ -60,42 +52,27 @@ public class JiuChi extends View {
 
         maximumFlingVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();
         minimumFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
+
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        this.mWidth = w;
-
-        mLength = mWidth / gapWidth + 1;
-        offset = 0;
-        minOffset = (int) (minValue * gapWidth / 0.1f);
-        maxOffset = (int) (maxValue * gapWidth / 0.1f);
-        Log.d("wang", "=====onSizeChanged===");
-        //curIndex=-mLength/2;
-        //curOffset=curIndex*SCALE_SIZE;
+        mWidth = w;
+        mLength = (int) (mWidth / gapWidth) + 1;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-
         // 绘制背景
         canvas.drawColor(0xffefefef);
 
-
-        if (offset<minOffset) {
-            offset = minOffset;
-        }
-
-        if (offset>maxOffset) {
-            offset = maxOffset;
-        }
-
-        float v = offset - mWidth / 2.0f;
-        float fn = v / gapWidth;
+        // 计算第一个刻度的坐标
+        float c = offset - mWidth / 2.0f;
+        float fn = c / gapWidth;
         int n = (int) Math.ceil(fn);
-        float startX = gapWidth * n - v;
+        float startX = gapWidth * n - c;
 
 
         for (int i = 0; i < mLength; i++) {
@@ -112,7 +89,7 @@ public class JiuChi extends View {
                 mPaint.setColor(Color.BLACK);
                 mPaint.setTextSize(25);
                 mPaint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText((n * perValue) + "", x, 120, mPaint);
+                canvas.drawText((n ) + "", x, 120, mPaint);
             } else {
 
                 mPaint.setColor(Color.GRAY);
@@ -123,16 +100,12 @@ public class JiuChi extends View {
             n++;
         }
 
-
+        // 绘制中线上的指针
         mPaint.setColor(Color.GREEN);
         mPaint.setStrokeWidth(8);
         canvas.drawLine(mWidth / 2, 0, mWidth / 2, 80, mPaint);
-    }
 
-    private void offsetX(float o) {
-        offset += o;
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -146,13 +119,11 @@ public class JiuChi extends View {
                 }
                 mVelocityTracker.clear();
                 mVelocityTracker.addMovement(event);
-
                 break;
             case MotionEvent.ACTION_MOVE:
                 float x = event.getX();
-                offsetX(lastX - x);
+                offset += (lastX - x);
                 lastX = x;
-
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
@@ -160,28 +131,24 @@ public class JiuChi extends View {
                 mVelocityTracker.computeCurrentVelocity(1000, maximumFlingVelocity);
                 int xVelocity = (int) mVelocityTracker.getXVelocity();
                 if (Math.abs(xVelocity) > minimumFlingVelocity) {
-                    mScroller.fling((int) offset, 0, -xVelocity / 4, 0, minOffset, maxOffset, 0, 0);
+                    mScroller.fling((int) offset, 0, -xVelocity / 2, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0);
                     invalidate();
 
                 } else {
-                    int des = Math.round(offset / gapWidth) * gapWidth;
-
+                    int des = Math.round(offset / gapWidth) * (int) gapWidth;
                     mScroller.startScroll((int) offset, 0, (int) (des - offset), 0);
                     invalidate();
                 }
-
                 break;
         }
-
         return true;
     }
-
 
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             if (!mScroller.computeScrollOffset()) {
-                int des = Math.round(offset / gapWidth) * gapWidth;
+                int des = Math.round(offset / gapWidth) * (int)gapWidth;
                 mScroller.startScroll((int) offset, 0, (int) (des - offset), 0);
             }
             offset = mScroller.getCurrX();

@@ -1,12 +1,4 @@
-﻿---
-title: 自定义 view 之薄荷 app 的卷尺效果
-date: 2017-10-26 13:14:15
-categories: android
-thumbnail: http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/dbc69bab-08c2-4b1c-8ebf-54fd1a29b896.png
-tags:
-- 自定义view
----
-前几天看到 [HenCoder「仿写酷界面」活动——征稿](http://hencoder.com/activity-mock-1/) ，扔物线大大找了几个很酷炫的效果让读者们仿写，最后选出的作品效果也很好，但是没有讲解实现思路，很多人还是不知道怎么做，所以我决定自己动手撸一篇文章记录下学习过程，光看别人写的，自己不动手永远也学不会啊是吧。
+﻿前几天看到 [HenCoder「仿写酷界面」活动——征稿](http://hencoder.com/activity-mock-1/) ，扔物线大大找了几个很酷炫的效果让读者们仿写，最后选出的作品效果也很好，但是没有讲解实现思路，很多人还是不知道怎么做，所以我决定自己动手撸一篇文章记录下学习过程，光看别人写的，自己不动手永远也学不会啊是吧。
 
 我看了几个薄荷卷尺的源码，这里记录下一种实现思路，不一定是最优的方法，仅供学习参考。
 
@@ -251,8 +243,6 @@ invalidate();
 最后就是最大值和最小值的限制了，这个在绘制的时候判断一下偏移量就可以了，大家可以自己动手试试哦。
 
 哦，还有滑动时候的监听，这个在偏移量改变的时候调用自定义的回调函数就好了。
-
-源码地址:[https://github.com/jianshijiuyou/Jiuchi](https://github.com/jianshijiuyou/Jiuchi) 。
 
 源码仅供学习使用，如果要在项目中使用不妨看看下面这个:
 

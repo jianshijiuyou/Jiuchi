@@ -4,16 +4,16 @@
 
 先看效果吧，
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/7e2f7811-fb4a-4dd4-919d-b66238bb0495.gif)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/7e2f7811-fb4a-4dd4-919d-b66238bb0495.gif)
 
 ## 分析
 先看张我画的张图，
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/32a2b2e9-696b-4f37-8973-8f2c167581da.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/32a2b2e9-696b-4f37-8973-8f2c167581da.png)
 
 可以想想成有一把尺子在屏幕上面左右滑动，需要绘制的部分就是尺子和屏幕重合的部分，那么绘制的关键点就是找到第一个刻度线的位置。
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/e179bd03-aa41-4bc9-a52b-163b957edaaa.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/e179bd03-aa41-4bc9-a52b-163b957edaaa.png)
 
 那么这里就是计算线段 E 的长度了，思路如下：
 
@@ -32,7 +32,7 @@ B: 屏幕的一半，已知条件。
 当然，也可以这样算: 
 C 除以 F 向上取整就能得出第一个画的刻度是第几个刻度（比如这里得出是第 N 个 刻度），然后再 N*F-C 就是 第一个刻度的坐标了。
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/dbc69bab-08c2-4b1c-8ebf-54fd1a29b896.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/dbc69bab-08c2-4b1c-8ebf-54fd1a29b896.png)
 
 第一个刻度位置找到了，那后面的自然也就出来了，现在问题是一共画多少个刻度呢，肯定只会画卷尺落在屏幕上的部分对不对，思路有两种:
 
@@ -117,7 +117,7 @@ protected void onDraw(Canvas canvas) {
 
 现在就可以初步看到效果了
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/0878144f-274e-4980-a46e-57f4c4aa2a9c.gif)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/0878144f-274e-4980-a46e-57f4c4aa2a9c.gif)
 
 
 
@@ -207,7 +207,7 @@ public void computeScroll() {
 
 再来看看效果
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/47debdd3-2efd-469f-a452-b20621c48865.gif)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/47debdd3-2efd-469f-a452-b20621c48865.gif)
 
 
 
@@ -220,7 +220,7 @@ public void computeScroll() {
 
 不多说，请看图
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/109043c2-fc49-40fe-acf9-a1ef43abe4ad.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/109043c2-fc49-40fe-acf9-a1ef43abe4ad.png)
 
 需要滑动的距离 = Math.round（当前便偏移量 / 最小刻度）* 最小刻度 - 当前便偏移量
 
@@ -238,7 +238,7 @@ invalidate();
 
 看看效果吧
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/customviewjiuchi/4f649b41-98a8-4845-8157-c202782902c4.gif)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/customviewjiuchi/4f649b41-98a8-4845-8157-c202782902c4.gif)
 
 最后就是最大值和最小值的限制了，这个在绘制的时候判断一下偏移量就可以了，大家可以自己动手试试哦。
 
